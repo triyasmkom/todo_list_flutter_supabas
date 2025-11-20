@@ -1,0 +1,24 @@
+class TodoModel {
+  final String id;
+  final String title;
+  final bool isDone;
+
+  TodoModel({required this.id, required this.title, required this.isDone});
+
+  factory TodoModel.fromJson(Map<String, dynamic> json) {
+    return TodoModel(
+      id: json['id'],
+      title: json['title'],
+      isDone: json['is_done'] ?? false,
+    );
+  }
+
+  static List<TodoModel> fromJsonToList(List<dynamic> jsonList) {
+    return jsonList.map((json) => TodoModel.fromJson(json)).toList();
+  }
+
+  @override
+  String toString() {
+    return 'TodoModel(id: $id, title: $title, isDone: $isDone)';
+  }
+}
