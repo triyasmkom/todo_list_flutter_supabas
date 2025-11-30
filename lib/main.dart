@@ -9,6 +9,7 @@ import 'package:todolist_app/screen/auth/forgot_password_page.dart';
 import 'package:todolist_app/screen/auth/reset_new_password_page.dart';
 import 'package:todolist_app/screen/auth/sign_in_page.dart';
 import 'package:todolist_app/screen/auth/sign_up_page..dart';
+import 'package:todolist_app/screen/bottom_navigation_bar_page.dart';
 import 'package:todolist_app/screen/todo_screen.dart';
 import 'package:todolist_app/service/auth_service.dart';
 import 'package:todolist_app/service/todo_service.dart';
@@ -62,13 +63,14 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
       ),
-      home: SignInPage(),
+      home: BottomNavigationBarPage(),
       routes: {
         '/signin': (context) => SignInPage(),
         '/signup': (context) => SignUpPage(),
-        '/home': (context) => TodoScreen(),
+        '/todo': (context) => TodoScreen(),
         '/forgot-password': (context) => ForgotPasswordPage(),
         '/reset-password': (context) => ResetNewPasswordPage(),
+        '/bottom-page': (context) => BottomNavigationBarPage(),
       },
     );
   }

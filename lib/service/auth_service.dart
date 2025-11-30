@@ -13,8 +13,6 @@ class AuthService {
         email: login.email.trim(),
       );
 
-      print("Login: ${response.session} ${response.user}");
-
       return response;
     } on AuthException catch (e) {
       throw Exception(e.message);

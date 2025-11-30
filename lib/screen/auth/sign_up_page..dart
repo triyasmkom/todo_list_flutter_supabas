@@ -39,14 +39,16 @@ class SignUpPage extends StatelessWidget {
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
-        child: Center(
-          child:
-              isSmallScreen
-                  ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [_Logo(), _FormContent()],
-                  )
-                  : Container(),
+        child: SingleChildScrollView(
+          child: Center(
+            child:
+                isSmallScreen
+                    ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [_Logo(), _FormContent()],
+                    )
+                    : Container(),
+          ),
         ),
       ),
     );

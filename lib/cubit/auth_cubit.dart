@@ -52,9 +52,30 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(e.toString()));
     }
   }
+
+  Future<void> getCurrentUser() async {
+    emit(AuthLoading());
+    try {
+      final user = _service.currentUser;
+      if (user == null) {
+        emit(AuthUnauthenticated());
+      } else {
+        emit(AuthAuthenticated(user));
+      }
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
 }
 
 abstract class AuthState {}
+
+class AuthUnauthenticated extends AuthState {}
+
+class AuthAuthenticated extends AuthState {
+  final User user;
+  AuthAuthenticated(this.user);
+}
 
 class AuthInitial extends AuthState {}
 

@@ -16,10 +16,16 @@ class TodoService {
 
   Future<void> addTodo(String title) async {
     return run(() async {
+      final user = _client.auth.currentUser;
+      if (user == null) {
+        throw Exception("User not logged in");
+      }
+
       await _client.from('todos').insert({
         'title': title,
         'is_done': false,
         'created_at': DateTime.now().toIso8601String(),
+        'user_id': user.id,
       });
     });
   }

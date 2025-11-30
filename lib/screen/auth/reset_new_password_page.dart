@@ -39,67 +39,69 @@ class _ResetNewPasswordPageState extends State<ResetNewPasswordPage> {
       },
       child: Scaffold(
         appBar: AppBar(title: Text("Set New Password")),
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              TextFormField(
-                validator: Validator.password,
-                obscureText: !_isPasswordVisible,
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  hintText: "Enter your password",
-                  prefixIcon: const Icon(Icons.lock_outline_rounded),
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                TextFormField(
+                  validator: Validator.password,
+                  obscureText: !_isPasswordVisible,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    hintText: "Enter your password",
+                    prefixIcon: const Icon(Icons.lock_outline_rounded),
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              gap(),
+                gap(),
 
-              TextFormField(
-                validator:
-                    (value) => Validator.confirmPassword(
-                      value,
-                      passwordController.text,
-                    ),
-                controller: retypePasswordController,
-                obscureText: !_isPasswordVisible,
-                decoration: InputDecoration(
-                  labelText: "Retype Password",
-                  hintText: "Enter your password",
-                  prefixIcon: const Icon(Icons.lock_outline_rounded),
-                  border: const OutlineInputBorder(),
+                TextFormField(
+                  validator:
+                      (value) => Validator.confirmPassword(
+                        value,
+                        passwordController.text,
+                      ),
+                  controller: retypePasswordController,
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: "Retype Password",
+                    hintText: "Enter your password",
+                    prefixIcon: const Icon(Icons.lock_outline_rounded),
+                    border: const OutlineInputBorder(),
+                  ),
                 ),
-              ),
 
-              gap(),
+                gap(),
 
-              SizedBox(
-                height: 50,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    context.read<AuthCubit>().resetPassword(
-                      passwordController.text.trim(),
-                    );
-                  },
-                  child: Text("Update Password"),
+                SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      context.read<AuthCubit>().resetPassword(
+                        passwordController.text.trim(),
+                      );
+                    },
+                    child: Text("Update Password"),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

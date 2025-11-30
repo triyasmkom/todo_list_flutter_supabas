@@ -24,7 +24,7 @@ class SignInPage extends StatelessWidget {
 
         if (state is AuthLogin) {
           Navigator.pop(context); // tutup loading
-          Navigator.pushReplacementNamed(context, "/home");
+          Navigator.pushReplacementNamed(context, "/bottom-page");
         }
 
         if (state is AuthError) {
@@ -35,14 +35,16 @@ class SignInPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        body: Center(
-          child:
-              isSmallScreen
-                  ? Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [_Logo(), _FormContent()],
-                  )
-                  : Container(),
+        body: SingleChildScrollView(
+          child: Center(
+            child:
+                isSmallScreen
+                    ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [_Logo(), _FormContent()],
+                    )
+                    : Container(),
+          ),
         ),
       ),
     );

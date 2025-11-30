@@ -45,32 +45,34 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       },
       child: Scaffold(
         appBar: AppBar(title: Text("Forgot Password")),
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  hintText: "Enter your email",
-                  prefixIcon: Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                    hintText: "Enter your email",
+                    prefixIcon: Icon(Icons.email_outlined),
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              gap(),
-              SizedBox(
-                height: 50,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    final email = emailController.text.trim();
-                    context.read<AuthCubit>().forgotPassword(email);
-                  },
-                  child: Text("Send Reset Email"),
+                gap(),
+                SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final email = emailController.text.trim();
+                      context.read<AuthCubit>().forgotPassword(email);
+                    },
+                    child: Text("Send Reset Email"),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
