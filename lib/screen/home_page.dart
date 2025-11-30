@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todolist_app/cubit/prayer_cubit.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,7 +16,9 @@ class _HomePageState extends State<HomePage> {
     _MenuItem(icon: Icons.person, label: "Profile"),
     _MenuItem(icon: Icons.settings, label: "Settings"),
     _MenuItem(icon: Icons.money, label: "Keuangan"),
-    _MenuItem(icon: Icons.logout, label: "Logout"),
+    _MenuItem(icon: Icons.cloud_outlined, label: "Cuaca"),
+    _MenuItem(icon: Icons.mosque, label: "Pray", route: "/schedule-pray"),
+    _MenuItem(icon: Icons.menu_book, label: "Qur'an"),
   ];
 
   void handleMenuClick(_MenuItem item) {

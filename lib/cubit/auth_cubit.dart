@@ -8,7 +8,21 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthService _service;
   AuthCubit(this._service) : super(AuthInitial());
 
-  Future<void> fetchUser() async {}
+  Future<void> fetchUser() async {
+    emit(AuthLoading());
+    try {
+      final session = Supabase.instance.client.auth.currentSession;
+      final user = Supabase.instance.client.auth.currentUser;
+
+      if (session == null || user == null) {
+        emit(AuthUnauthenticated());
+      } else {
+        emit(AuthAuthenticated(user));
+      }
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
 
   Future<void> register(RegisterModel reg) async {
     emit(AuthLoading());

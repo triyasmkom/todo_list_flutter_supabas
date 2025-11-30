@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todolist_app/cubit/auth_cubit.dart';
+import 'package:todolist_app/screen/auth/sign_in_page.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
 import 'package:todolist_app/screen/widget/divider_widget.dart';
 import 'package:todolist_app/screen/widget/menu_item_custom_widget.dart';
@@ -103,10 +104,9 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        print(state);
-        if (state is AuthLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        // if (state is AuthLoading) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
 
         if (state is AuthLogin) {
           final user = state.user;
@@ -162,9 +162,9 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
               ),
             ),
           );
+        } else {
+          return const SignInPage();
         }
-
-        return const Center(child: Text("User tidak login"));
       },
     );
   }

@@ -4,14 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todolist_app/cubit/auth_cubit.dart';
+import 'package:todolist_app/cubit/prayer_cubit.dart';
 import 'package:todolist_app/cubit/todo_cubit.dart';
+import 'package:todolist_app/screen/account/menu_account_page.dart';
 import 'package:todolist_app/screen/auth/forgot_password_page.dart';
 import 'package:todolist_app/screen/auth/reset_new_password_page.dart';
 import 'package:todolist_app/screen/auth/sign_in_page.dart';
 import 'package:todolist_app/screen/auth/sign_up_page..dart';
 import 'package:todolist_app/screen/bottom_navigation_bar_page.dart';
+import 'package:todolist_app/screen/home_menu/schedule_pray_page.dart';
 import 'package:todolist_app/screen/todo_screen.dart';
 import 'package:todolist_app/service/auth_service.dart';
+import 'package:todolist_app/service/prayer_service.dart';
 import 'package:todolist_app/service/todo_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -28,12 +32,14 @@ void main() async {
 
   final todoService = TodoService();
   final authService = AuthService();
+  final prayerService = PrayerService();
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider<TodoCubit>(create: (_) => TodoCubit([], todoService)),
         BlocProvider<AuthCubit>(create: (_) => AuthCubit(authService)),
+        BlocProvider<PrayerCubit>(create: (_) => PrayerCubit(prayerService)),
       ],
       child: MyApp(),
     ),
@@ -71,6 +77,8 @@ class _MyAppState extends State<MyApp> {
         '/forgot-password': (context) => ForgotPasswordPage(),
         '/reset-password': (context) => ResetNewPasswordPage(),
         '/bottom-page': (context) => BottomNavigationBarPage(),
+        '/menu-account': (context) => MenuAccountPage(),
+        '/schedule-pray': (context) => SchedulePrayPage(),
       },
     );
   }
@@ -89,7 +97,6 @@ class DeepLinkHandler {
   }
 
   static void _handle(Uri uri) async {
-    print("DEEPLINK URI: $uri");
     if (uri.scheme == "myapp" && uri.host == "reset-password") {
       String? token;
 
@@ -107,13 +114,9 @@ class DeepLinkHandler {
         token = params['access_token'];
       }
 
-      print("TOKEN PARSED: $token");
-
       if (token != null && token!.isNotEmpty) {
         await Supabase.instance.client.auth.exchangeCodeForSession(token!);
       }
-
-      print("TOKEN: $token");
 
       navigatorKey.currentState?.pushNamed("/reset-password");
     }

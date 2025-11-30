@@ -80,6 +80,8 @@ class AuthService {
     }
   }
 
+  Session? get currentSession => _client.auth.currentSession;
+
   // cek status user saat ini
   User? get currentUser => _client.auth.currentUser;
 }
