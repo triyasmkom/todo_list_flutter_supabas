@@ -12,6 +12,7 @@ import 'package:todolist_app/screen/auth/reset_new_password_page.dart';
 import 'package:todolist_app/screen/auth/sign_in_page.dart';
 import 'package:todolist_app/screen/auth/sign_up_page..dart';
 import 'package:todolist_app/screen/bottom_navigation_bar_page.dart';
+import 'package:todolist_app/screen/home_menu/calendar_holiday_page.dart';
 import 'package:todolist_app/screen/home_menu/schedule_pray_page.dart';
 import 'package:todolist_app/screen/todo_screen.dart';
 import 'package:todolist_app/service/auth_service.dart';
@@ -79,6 +80,7 @@ class _MyAppState extends State<MyApp> {
         '/bottom-page': (context) => BottomNavigationBarPage(),
         '/menu-account': (context) => MenuAccountPage(),
         '/schedule-pray': (context) => SchedulePrayPage(),
+        '/calendar': (context) => CalendarHolidayPage(),
       },
     );
   }

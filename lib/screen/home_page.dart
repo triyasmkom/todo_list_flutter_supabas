@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todolist_app/cubit/prayer_cubit.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +17,11 @@ class _HomePageState extends State<HomePage> {
     _MenuItem(icon: Icons.cloud_outlined, label: "Cuaca"),
     _MenuItem(icon: Icons.mosque, label: "Pray", route: "/schedule-pray"),
     _MenuItem(icon: Icons.menu_book, label: "Qur'an"),
+    _MenuItem(
+      icon: Icons.calendar_month_outlined,
+      label: "Calendar",
+      route: "/calendar",
+    ),
   ];
 
   void handleMenuClick(_MenuItem item) {
