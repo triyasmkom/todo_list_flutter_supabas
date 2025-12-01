@@ -46,7 +46,6 @@ class PrayerService {
     final url = "https://countriesnow.space/api/v0.1/countries";
 
     final response = await http.get(Uri.parse(url));
-    print("Status ${response.statusCode}");
     if (response.statusCode == 200) {
       final resp = json.decode(response.body);
       List countries = resp["data"];

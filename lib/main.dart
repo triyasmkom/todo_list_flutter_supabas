@@ -6,7 +6,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todolist_app/cubit/auth_cubit.dart';
 import 'package:todolist_app/cubit/prayer_cubit.dart';
 import 'package:todolist_app/cubit/todo_cubit.dart';
+import 'package:todolist_app/cubit/user_cubit.dart';
 import 'package:todolist_app/screen/account/menu_account_page.dart';
+import 'package:todolist_app/screen/account/profile_page.dart';
 import 'package:todolist_app/screen/auth/forgot_password_page.dart';
 import 'package:todolist_app/screen/auth/reset_new_password_page.dart';
 import 'package:todolist_app/screen/auth/sign_in_page.dart';
@@ -18,6 +20,7 @@ import 'package:todolist_app/screen/todo_screen.dart';
 import 'package:todolist_app/service/auth_service.dart';
 import 'package:todolist_app/service/prayer_service.dart';
 import 'package:todolist_app/service/todo_service.dart';
+import 'package:todolist_app/service/user_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -34,6 +37,7 @@ void main() async {
   final todoService = TodoService();
   final authService = AuthService();
   final prayerService = PrayerService();
+  final userService = UserService();
 
   runApp(
     MultiBlocProvider(
@@ -41,6 +45,7 @@ void main() async {
         BlocProvider<TodoCubit>(create: (_) => TodoCubit([], todoService)),
         BlocProvider<AuthCubit>(create: (_) => AuthCubit(authService)),
         BlocProvider<PrayerCubit>(create: (_) => PrayerCubit(prayerService)),
+        BlocProvider<UserCubit>(create: (_) => UserCubit(userService)),
       ],
       child: MyApp(),
     ),
@@ -81,6 +86,7 @@ class _MyAppState extends State<MyApp> {
         '/menu-account': (context) => MenuAccountPage(),
         '/schedule-pray': (context) => SchedulePrayPage(),
         '/calendar': (context) => CalendarHolidayPage(),
+        '/profile': (context) => ProfilePage(),
       },
     );
   }

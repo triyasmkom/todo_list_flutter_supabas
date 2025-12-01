@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todolist_app/cubit/auth_cubit.dart';
+import 'package:todolist_app/cubit/user_cubit.dart';
 import 'package:todolist_app/screen/auth/sign_in_page.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
 import 'package:todolist_app/screen/widget/divider_widget.dart';
@@ -14,6 +15,8 @@ class MenuAccountPage extends StatefulWidget {
 }
 
 class _MenuAccountPageState extends State<MenuAccountPage> {
+  late String images = '';
+
   List<Widget> _menuItems() {
     return [
       MenuItemCustomWidget(
@@ -38,6 +41,7 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
               MenuItemCustomWidget(
                 icon: Icons.person_outline,
                 label: 'Profil Saya',
+                route: '/profile',
               ),
             ),
       ),
@@ -101,6 +105,12 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<UserCubit>().loadProfile();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
@@ -117,48 +127,57 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
           return Scaffold(
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 45,
-                        backgroundColor: Colors.blue.shade200,
-                        child: const CircleAvatar(
-                          radius: 42,
-                          backgroundImage: AssetImage("assets/profile.jpg"),
-                          // Bisa ganti ke network image
+              child: BlocListener<UserCubit, UserState>(
+                listener: (context, state) {
+                  if (state is UserLoaded) {
+                    setState(() {
+                      images = state.user['photo_url'];
+                    });
+                  }
+                },
+                child: Column(
+                  children: [
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.blue.shade200,
+                          child: CircleAvatar(
+                            radius: 58,
+                            backgroundImage: NetworkImage(images, scale: 0.2),
+                            // Bisa ganti ke network image
+                          ),
                         ),
-                      ),
-                      gap(12),
-                      Text(
-                        "$firstName $lastName",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        gap(12),
+                        Text(
+                          "$firstName $lastName",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      gap(4),
-                      Text(
-                        user?.email ?? '-',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey.shade600,
+                        gap(4),
+                        Text(
+                          user?.email ?? '-',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-
-                  gap(25),
-
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      ],
                     ),
-                    elevation: 2,
-                    child: Column(children: _menuItems()),
-                  ),
-                ],
+
+                    gap(25),
+
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 2,
+                      child: Column(children: _menuItems()),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
