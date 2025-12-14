@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist_app/screen/account/menu_account_page.dart';
-import 'package:todolist_app/screen/home_page.dart';
+import 'package:todolist_app/screen/home_menu/home_page.dart';
 import 'package:todolist_app/screen/todo_screen.dart';
 
 class BottomNavigationBarPage extends StatefulWidget {
@@ -34,7 +34,6 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

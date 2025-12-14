@@ -31,6 +31,7 @@ class _TodoScreenState extends State<TodoScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
+        print("nav bottom $state");
         if (state is AuthLogin) {
           return Scaffold(
             appBar: AppBar(title: const Text("Todo List")),

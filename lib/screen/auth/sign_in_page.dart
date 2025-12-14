@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todolist_app/component/button_component.dart';
+import 'package:todolist_app/component/logo_component.dart';
+import 'package:todolist_app/component/text_button_component.dart';
+import 'package:todolist_app/component/text_form_field_component.dart';
 import 'package:todolist_app/cubit/auth_cubit.dart';
 import 'package:todolist_app/model/login_model.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
@@ -35,50 +39,45 @@ class SignInPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Center(
-            child:
-                isSmallScreen
-                    ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [_Logo(), _FormContent()],
-                    )
-                    : Container(),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/background/login.png"),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Center(
+              child:
+                  isSmallScreen
+                      ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          LogoComponent(text: "Login Page"),
+                          _FormContent(),
+                        ],
+                      )
+                      : Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(120),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: LogoComponent(text: "Login Page"),
+                              ),
+                              SizedBox(width: 48),
+                              Expanded(child: _FormContent()),
+                            ],
+                          ),
+                        ),
+                      ),
+            ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Logo extends StatefulWidget {
-  const _Logo();
-
-  @override
-  State<_Logo> createState() => __LogoState();
-}
-
-class __LogoState extends State<_Logo> {
-  @override
-  Widget build(BuildContext context) {
-    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        FlutterLogo(size: isSmallScreen ? 100 : 200),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            "Login to Todo List!",
-            textAlign: TextAlign.center,
-            style:
-                isSmallScreen
-                    ? Theme.of(context).textTheme.titleMedium
-                    : Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-      ],
     );
   }
 }
@@ -99,126 +98,151 @@ class __FormContentState extends State<_FormContent> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadRemember();
+  }
+
+  void loadRemember() async {
+    final cubit = context.read<AuthCubit>();
+    final saved = await cubit.loadRememberedEmail();
+
+    if (saved != null) {
+      setState(() {
+        emailController.text = saved;
+        _rememberMe = true;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(maxWidth: 300),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: "Email",
-                hintText: "Enter your email",
-                prefixIcon: Icon(Icons.email_outlined),
-                border: OutlineInputBorder(),
-              ),
-              validator: Validator.email,
-            ),
-
-            gap(),
-
-            TextFormField(
-              controller: passwordController,
-              validator: Validator.password,
-              obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                labelText: "Password",
-                hintText: "Enter your password",
-                prefixIcon: const Icon(Icons.lock_outline_rounded),
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                  icon: Icon(
-                    _isPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  ),
-                ),
-              ),
-            ),
-
-            gap(),
-
-            CheckboxListTile(
-              value: _rememberMe,
-              onChanged: (value) {
-                if (value == null) return;
-
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-              title: const Text("Remember me"),
-              controlAffinity: ListTileControlAffinity.leading,
-              dense: true,
-              contentPadding: const EdgeInsets.all(0),
-            ),
-
-            gap(),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // do something
-                    final login = LoginModel(
-                      email: emailController.text.trim(),
-                      password: passwordController.text.trim(),
-                    );
-
-                    context.read<AuthCubit>().login(login);
-                  }
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Sign in",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-
-            gap(),
-
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/forgot-password");
-                },
-                child: Text("Forgot Password"),
-              ),
-            ),
-
-            SizedBox(
-              width: double.infinity,
-              child: Row(
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        return Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 300),
+            child: Form(
+              key: _formKey,
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don\'t have an account?"),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/signup");
+                  TextFormFieldComponent(
+                    validator: Validator.email,
+                    controller: emailController,
+                    hintText: "Enter your email",
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+
+                  gap(),
+
+                  TextFormFieldComponent(
+                    controller: passwordController,
+                    validator: Validator.password,
+                    obscureText: !_isPasswordVisible,
+                    hintText: "Enter your password",
+                    prefixIcon: Icons.lock_outline_rounded,
+                    keyboardType: TextInputType.visiblePassword,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                    ),
+                  ),
+
+                  gap(),
+
+                  CheckboxListTile(
+                    value: _rememberMe,
+                    onChanged: (value) {
+                      if (value == null) return;
+
+                      setState(() {
+                        _rememberMe = value;
+                      });
                     },
-                    child: Text("Sign up"),
+                    title: const Text("Remember me"),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    dense: true,
+                    contentPadding: const EdgeInsets.all(0),
+                  ),
+
+                  gap(),
+
+                  PrimaryButtonComponent(
+                    text: "Sign in",
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        // do something
+                        final login = LoginModel(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                          rememberMe: _rememberMe,
+                        );
+
+                        context.read<AuthCubit>().login(login);
+                      }
+                    },
+                  ),
+
+                  gap(),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextButtonComponent(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/forgot-password");
+                      },
+                      labelText: "Forgot Password",
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don\'t have an account?",
+                          style: TextStyle(
+                            fontFamily: "UbuntuFont",
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextButtonComponent(
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/signup");
+                          },
+                          labelText: "Sign up",
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

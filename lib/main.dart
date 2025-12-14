@@ -13,9 +13,11 @@ import 'package:todolist_app/screen/auth/forgot_password_page.dart';
 import 'package:todolist_app/screen/auth/reset_new_password_page.dart';
 import 'package:todolist_app/screen/auth/sign_in_page.dart';
 import 'package:todolist_app/screen/auth/sign_up_page..dart';
-import 'package:todolist_app/screen/bottom_navigation_bar_page.dart';
+import 'package:todolist_app/screen/landing_page.dart';
 import 'package:todolist_app/screen/home_menu/calendar_holiday_page.dart';
 import 'package:todolist_app/screen/home_menu/schedule_pray_page.dart';
+import 'package:todolist_app/screen/home_menu/weather_page.dart';
+import 'package:todolist_app/screen/launcher_page.dart';
 import 'package:todolist_app/screen/todo_screen.dart';
 import 'package:todolist_app/service/auth_service.dart';
 import 'package:todolist_app/service/prayer_service.dart';
@@ -62,7 +64,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     DeepLinkHandler.init();
   }
@@ -71,11 +72,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
       title: "Test",
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
       ),
-      home: BottomNavigationBarPage(),
+      home: LauncherPage(),
+      // home: SignInPage(),
       routes: {
         '/signin': (context) => SignInPage(),
         '/signup': (context) => SignUpPage(),
@@ -87,6 +90,7 @@ class _MyAppState extends State<MyApp> {
         '/schedule-pray': (context) => SchedulePrayPage(),
         '/calendar': (context) => CalendarHolidayPage(),
         '/profile': (context) => ProfilePage(),
+        '/weather-page': (context) => WeatherPage(),
       },
     );
   }

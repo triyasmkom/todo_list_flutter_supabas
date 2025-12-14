@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todolist_app/component/button_component.dart';
+import 'package:todolist_app/component/logo_component.dart';
+import 'package:todolist_app/component/text_button_component.dart';
+import 'package:todolist_app/component/text_form_field_component.dart';
 import 'package:todolist_app/cubit/auth_cubit.dart';
 import 'package:todolist_app/model/register_model.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
@@ -39,50 +43,56 @@ class SignUpPage extends StatelessWidget {
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
-        child: SingleChildScrollView(
-          child: Center(
-            child:
-                isSmallScreen
-                    ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [_Logo(), _FormContent()],
-                    )
-                    : Container(),
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/background/login.png"),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: isSmallScreen ? double.infinity : 900,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child:
+                      isSmallScreen
+                          ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              LogoComponent(text: "Create Account"),
+                              SizedBox(height: 24),
+                              _FormContent(),
+                            ],
+                          )
+                          : Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(120),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: LogoComponent(
+                                      text: "Create Account",
+                                    ),
+                                  ),
+                                  SizedBox(width: 48),
+                                  Expanded(child: _FormContent()),
+                                ],
+                              ),
+                            ),
+                          ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Logo extends StatefulWidget {
-  const _Logo();
-
-  @override
-  State<_Logo> createState() => __LogoState();
-}
-
-class __LogoState extends State<_Logo> {
-  @override
-  Widget build(BuildContext context) {
-    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        FlutterLogo(size: isSmallScreen ? 100 : 200),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            "Create Account Todo List!",
-            textAlign: TextAlign.center,
-            style:
-                isSmallScreen
-                    ? Theme.of(context).textTheme.titleMedium
-                    : Theme.of(context).textTheme.titleSmall,
-          ),
-        ),
-      ],
     );
   }
 }
@@ -114,108 +124,83 @@ class __FormContentState extends State<_FormContent> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
+            TextFormFieldComponent(
               controller: firstNameController,
-              decoration: InputDecoration(
-                labelText: "First Name",
-                hintText: "Enter your first name",
-                prefixIcon: Icon(Icons.person_2_outlined),
-                border: OutlineInputBorder(),
-              ),
+              hintText: "Enter your first name",
+              keyboardType: TextInputType.text,
+              prefixIcon: Icons.person,
             ),
 
             gap(),
-            TextFormField(
+            TextFormFieldComponent(
               controller: lastNameController,
-              decoration: InputDecoration(
-                labelText: "Last Name",
-                hintText: "Enter your last name",
-                prefixIcon: Icon(Icons.person_2_outlined),
-                border: OutlineInputBorder(),
-              ),
+              keyboardType: TextInputType.text,
+              hintText: "Enter your last name",
+              prefixIcon: Icons.person_2_outlined,
             ),
 
             gap(),
-            TextFormField(
+            TextFormFieldComponent(
+              keyboardType: TextInputType.emailAddress,
               controller: emailController,
-              decoration: InputDecoration(
-                labelText: "Email",
-                hintText: "Enter your email",
-                prefixIcon: Icon(Icons.email_outlined),
-                border: OutlineInputBorder(),
-              ),
+              hintText: "Enter your email",
+              prefixIcon: Icons.email_outlined,
               validator: Validator.email,
             ),
 
             gap(),
 
-            TextFormField(
+            TextFormFieldComponent(
+              keyboardType: TextInputType.visiblePassword,
               validator: Validator.password,
               obscureText: !_isPasswordVisible,
               controller: passwordController,
-              decoration: InputDecoration(
-                labelText: "Password",
-                hintText: "Enter your password",
-                prefixIcon: const Icon(Icons.lock_outline_rounded),
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                  icon: Icon(
-                    _isPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  ),
+              hintText: "Enter your password",
+              prefixIcon: Icons.lock_outline_rounded,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
                 ),
               ),
             ),
 
             gap(),
 
-            TextFormField(
+            TextFormFieldComponent(
+              keyboardType: TextInputType.visiblePassword,
               validator:
                   (value) =>
                       Validator.confirmPassword(value, passwordController.text),
               controller: retypePasswordController,
               obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                labelText: "Retype Password",
-                hintText: "Enter your password",
-                prefixIcon: const Icon(Icons.lock_outline_rounded),
-                border: const OutlineInputBorder(),
-              ),
+              hintText: "Retype your password",
+              prefixIcon: Icons.lock_outline_rounded,
             ),
 
             gap(),
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // do something
-                    final reg = RegisterModel(
-                      firstName: firstNameController.text.trim(),
-                      lastName: lastNameController.text.trim(),
-                      email: emailController.text.trim(),
-                      password: passwordController.text.trim(),
-                    );
+            PrimaryButtonComponent(
+              text: "Sign Up",
+              onPressed: () {
+                if (_formKey.currentState?.validate() ?? false) {
+                  // do something
+                  final reg = RegisterModel(
+                    firstName: firstNameController.text.trim(),
+                    lastName: lastNameController.text.trim(),
+                    email: emailController.text.trim(),
+                    password: passwordController.text.trim(),
+                  );
 
-                    context.read<AuthCubit>().register(reg);
-                  }
-                },
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Sign up",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+                  context.read<AuthCubit>().register(reg);
+                }
+              },
             ),
+
             gap(),
             SizedBox(
               width: double.infinity,
@@ -223,12 +208,19 @@ class __FormContentState extends State<_FormContent> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Have an account?"),
-                  TextButton(
+                  Text(
+                    "Have an account?",
+                    style: TextStyle(
+                      fontFamily: "UbuntuFont",
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButtonComponent(
                     onPressed: () {
                       Navigator.pushNamed(context, "/signin");
                     },
-                    child: Text("Sign in"),
+                    labelText: "Sign In",
                   ),
                 ],
               ),

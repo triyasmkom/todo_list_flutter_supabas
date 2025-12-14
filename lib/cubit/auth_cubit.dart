@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todolist_app/model/login_model.dart';
 import 'package:todolist_app/model/register_model.dart';
@@ -39,10 +40,39 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       final response = await _service.signIn(login);
+
+      // Simpan remember me
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('remember_me', login.rememberMe);
+      if (login.rememberMe) {
+        await prefs.setString('save_email', login.email);
+      } else {
+        prefs.remove('save_email');
+      }
+
       emit(AuthLogin(response.session, response.user));
     } catch (e) {
       emit(AuthError(e.toString()));
       rethrow;
+    }
+  }
+
+  Future<String?> logout() async {
+    try {
+      await _service.signOut();
+
+      emit(AuthInitial());
+      final prefs = await SharedPreferences.getInstance();
+      final remember = prefs.getBool('remember_me') ?? false;
+
+      if (remember) {
+        return prefs.getString('save_email');
+      }
+
+      return null;
+    } catch (e) {
+      emit(AuthError(e.toString()));
+      throw Exception(e.toString());
     }
   }
 
@@ -79,6 +109,18 @@ class AuthCubit extends Cubit<AuthState> {
     } catch (e) {
       emit(AuthError(e.toString()));
     }
+  }
+
+  Future<String?> loadRememberedEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    final remember = prefs.getBool("remember_me") ?? false;
+
+    if (remember) {
+      emit(AuthSuccess());
+      return prefs.getString("saved_email");
+    }
+    emit(AuthInitial());
+    return null;
   }
 }
 

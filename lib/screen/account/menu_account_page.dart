@@ -16,6 +16,8 @@ class MenuAccountPage extends StatefulWidget {
 
 class _MenuAccountPageState extends State<MenuAccountPage> {
   late String images = '';
+  late String? firstName = '';
+  late String? lastName = '';
 
   List<Widget> _menuItems() {
     return [
@@ -72,11 +74,50 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
       dividerWidget(),
       MenuItemCustomWidget(
         icon: Icons.logout,
-        label: 'Logout',
-        onTap:
-            () => handleMenuClick(
-              MenuItemCustomWidget(icon: Icons.logout, label: 'Logout'),
+        label: 'Registrasi Face Recognition',
+        onTap: () {
+          handleMenuClick(
+            MenuItemCustomWidget(
+              icon: Icons.face,
+              label: 'Registrasi Face Recognition',
             ),
+          );
+        },
+      ),
+      dividerWidget(),
+      MenuItemCustomWidget(
+        icon: Icons.key,
+        label: 'Ganti Kata Sandi',
+        onTap: () {
+          handleMenuClick(
+            MenuItemCustomWidget(icon: Icons.logout, label: 'Ganti Kata Sandi'),
+          );
+        },
+      ),
+      dividerWidget(),
+      MenuItemCustomWidget(
+        icon: Icons.person_outline_rounded,
+        label: 'Tentang',
+        onTap: () {
+          handleMenuClick(
+            MenuItemCustomWidget(icon: Icons.logout, label: 'Tentang'),
+          );
+        },
+      ),
+      dividerWidget(),
+      MenuItemCustomWidget(
+        icon: Icons.logout,
+        label: 'Logout',
+        onTap: () {
+          _logout();
+          handleMenuClick(
+            MenuItemCustomWidget(
+              icon: Icons.logout,
+              label: 'Logout',
+              route: "/bottom-page",
+            ),
+          );
+        },
       ),
     ];
   }
@@ -104,6 +145,10 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
     Navigator.pushNamed(context, item.route!);
   }
 
+  void _logout() {
+    context.read<AuthCubit>().logout();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -114,15 +159,8 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        // if (state is AuthLoading) {
-        //   return const Center(child: CircularProgressIndicator());
-        // }
-
         if (state is AuthLogin) {
           final user = state.user;
-          final meta = user?.userMetadata ?? {};
-          final firstName = meta['first_name'] ?? '';
-          final lastName = meta['last_name'] ?? '';
 
           return Scaffold(
             body: SingleChildScrollView(
@@ -132,6 +170,8 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
                   if (state is UserLoaded) {
                     setState(() {
                       images = state.user['photo_url'];
+                      firstName = state.user['first_name'];
+                      lastName = state.user['last_name'];
                     });
                   }
                 },

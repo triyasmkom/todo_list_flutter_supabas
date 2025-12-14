@@ -14,7 +14,11 @@ class _HomePageState extends State<HomePage> {
     _MenuItem(icon: Icons.person, label: "Profile"),
     _MenuItem(icon: Icons.settings, label: "Settings"),
     _MenuItem(icon: Icons.money, label: "Keuangan"),
-    _MenuItem(icon: Icons.cloud_outlined, label: "Cuaca"),
+    _MenuItem(
+      icon: Icons.cloud_outlined,
+      label: "Cuaca",
+      route: "/weather-page",
+    ),
     _MenuItem(icon: Icons.mosque, label: "Pray", route: "/schedule-pray"),
     _MenuItem(icon: Icons.menu_book, label: "Qur'an"),
     _MenuItem(
@@ -51,7 +55,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: GridView.builder(
           itemCount: menuItems.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
