@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:todolist_app/screen/widget/custom_widged.dart';
+import 'package:todolist_app/component/app_bar_component.dart';
+import 'package:todolist_app/screen/widget/menu_service_home.dart';
+import 'package:todolist_app/screen/widget/menu_promo_product.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,98 +11,89 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<_MenuItem> menuItems = [
-    _MenuItem(icon: Icons.list_alt, label: "Todos", route: "/todo"),
-    _MenuItem(icon: Icons.person, label: "Profile"),
-    _MenuItem(icon: Icons.settings, label: "Settings"),
-    _MenuItem(icon: Icons.money, label: "Keuangan"),
-    _MenuItem(
+  final List<MenuItem> menuItems = [
+    MenuItem(icon: Icons.phone_android_outlined, label: "Pulsa"),
+    MenuItem(icon: Icons.electrical_services, label: "Listrik"),
+    MenuItem(icon: Icons.wifi, label: "Paket Data"),
+    MenuItem(icon: Icons.phone, label: "Telkom"),
+    MenuItem(
       icon: Icons.cloud_outlined,
       label: "Cuaca",
       route: "/weather-page",
     ),
-    _MenuItem(icon: Icons.mosque, label: "Pray", route: "/schedule-pray"),
-    _MenuItem(icon: Icons.menu_book, label: "Qur'an"),
-    _MenuItem(
+    MenuItem(icon: Icons.mosque, label: "Pray", route: "/schedule-pray"),
+
+    MenuItem(
       icon: Icons.calendar_month_outlined,
       label: "Calendar",
       route: "/calendar",
     ),
+    MenuItem(
+      icon: Icons.grid_view_rounded,
+      label: "Lainnya",
+      type: MenuType.more,
+    ),
+    MenuItem(icon: Icons.menu_book, label: "Qur'an"),
+    MenuItem(icon: Icons.list_alt, label: "Todos", route: "/todo"),
+    MenuItem(icon: Icons.person, label: "Profile"),
+    MenuItem(icon: Icons.settings, label: "Settings"),
+    MenuItem(icon: Icons.money, label: "Keuangan"),
   ];
-
-  void handleMenuClick(_MenuItem item) {
-    if (item.route == null) {
-      showDialog(
-        context: context,
-        builder:
-            (_) => AlertDialog(
-              title: const Text('Informasi'),
-              content: Text('Fitur ${item.label} belum tersedia'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-      );
-      return;
-    }
-
-    // Jika ada rute
-    Navigator.pushNamed(context, item.route!);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: GridView.builder(
-          itemCount: menuItems.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1,
-          ),
-          itemBuilder: (context, index) {
-            final item = menuItems[index];
-            return InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => handleMenuClick(item),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(item.icon, size: 40, color: Colors.blue),
-                    gap(10),
-                    Text(
-                      item.label,
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+      appBar: AppBarComponent(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            MenuServiceHome(menuItems: menuItems),
+            MenuPromoProduct(
+              title: "Product Popular",
+              viewportFraction: 0.9,
+              height: 180,
+              onPressed: () {},
+            ),
+            SizedBox(height: 12),
+            MenuPromoProduct(
+              title: "Rekomendasi",
+              viewportFraction: 0.45,
+              height: 180,
+              onPressed: () {},
+            ),
+            SizedBox(height: 12),
+            MenuPromoProduct(
+              title: "Hotel",
+              viewportFraction: 0.45,
+              height: 180,
+              onPressed: () {},
+            ),
+            SizedBox(height: 12),
+            MenuPromoProduct(
+              title: "Menu Makanan",
+              viewportFraction: 0.45,
+              height: 180,
+              onPressed: () {},
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _MenuItem {
+enum MenuType { normal, more }
+
+class MenuItem {
   final IconData icon;
   final String label;
   final String? route;
+  final MenuType type;
 
-  _MenuItem({required this.icon, required this.label, this.route});
+  MenuItem({
+    required this.icon,
+    required this.label,
+    this.route,
+    this.type = MenuType.normal,
+  });
 }

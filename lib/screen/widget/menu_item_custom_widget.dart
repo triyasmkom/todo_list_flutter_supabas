@@ -30,6 +30,7 @@ class MenuItemCustomWidget extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
+                  fontFamily: "PoppinsFont",
                 ),
               ),
             ),

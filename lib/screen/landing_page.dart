@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todolist_app/screen/account/menu_account_page.dart';
 import 'package:todolist_app/screen/home_menu/home_page.dart';
-import 'package:todolist_app/screen/todo_screen.dart';
+import 'package:todolist_app/screen/widget/history_page.dart';
 
 class BottomNavigationBarPage extends StatefulWidget {
   const BottomNavigationBarPage({super.key});
@@ -21,7 +21,7 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    TodoScreen(),
+    HistoryPage(),
     MenuAccountPage(),
   ];
 
@@ -35,21 +35,39 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.today_outlined),
-            label: 'Todo',
+      bottomNavigationBar: Container(
+        width: double.infinity,
+        height: 90,
+
+        child: BottomNavigationBar(
+          unselectedLabelStyle: TextStyle(
+            fontSize: 20,
+            fontFamily: "PoppinsFont",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: 'Akun',
+          selectedLabelStyle: TextStyle(
+            fontFamily: "PoppinsFont",
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+          backgroundColor: Color(0xff5b8bdf),
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, size: 30),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history, size: 30),
+              label: 'Riwayat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person, size: 30),
+              label: 'Akun',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

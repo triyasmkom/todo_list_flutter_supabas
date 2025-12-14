@@ -74,6 +74,7 @@ flutter:
     - assets/weather/
     - assets/logo/
     - assets/background/
+    - assets/icons/
     # - images/a_dot_burr.jpeg
     # - images/a_dot_ham.jpeg
 
@@ -92,6 +93,9 @@ flutter:
   - family: UbuntuFont
     fonts:
       - asset: assets/fonts/Ubuntu/Ubuntu-Regular.ttf
+  - family: PoppinsFont
+    fonts:
+      - asset: assets/fonts/Poppins/Poppins-Regular.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

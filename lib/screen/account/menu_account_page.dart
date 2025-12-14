@@ -163,60 +163,73 @@ class _MenuAccountPageState extends State<MenuAccountPage> {
           final user = state.user;
 
           return Scaffold(
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: BlocListener<UserCubit, UserState>(
-                listener: (context, state) {
-                  if (state is UserLoaded) {
-                    setState(() {
-                      images = state.user['photo_url'];
-                      firstName = state.user['first_name'];
-                      lastName = state.user['last_name'];
-                    });
-                  }
-                },
-                child: Column(
-                  children: [
-                    Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Colors.blue.shade200,
-                          child: CircleAvatar(
-                            radius: 58,
-                            backgroundImage: NetworkImage(images, scale: 0.2),
-                            // Bisa ganti ke network image
+            body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/background/login.png"),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: BlocListener<UserCubit, UserState>(
+                  listener: (context, state) {
+                    if (state is UserLoaded) {
+                      setState(() {
+                        images = state.user['photo_url'];
+                        firstName = state.user['first_name'];
+                        lastName = state.user['last_name'];
+                      });
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.blue.shade200,
+                            child: CircleAvatar(
+                              radius: 58,
+                              backgroundImage: NetworkImage(images, scale: 0.2),
+                              // Bisa ganti ke network image
+                            ),
                           ),
-                        ),
-                        gap(12),
-                        Text(
-                          "$firstName $lastName",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          gap(12),
+                          Text(
+                            "$firstName $lastName",
+                            style: TextStyle(
+                              fontFamily: "PoppinsFont",
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        gap(4),
-                        Text(
-                          user?.email ?? '-',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade600,
+                          gap(4),
+                          Text(
+                            user?.email ?? '-',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "PoppinsFont",
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-
-                    gap(25),
-
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        ],
                       ),
-                      elevation: 2,
-                      child: Column(children: _menuItems()),
-                    ),
-                  ],
+
+                      gap(25),
+
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 2,
+                        child: Column(children: _menuItems()),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

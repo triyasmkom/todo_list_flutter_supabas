@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todolist_app/component/button_component.dart';
+import 'package:todolist_app/component/logo_component.dart';
+import 'package:todolist_app/component/text_form_field_component.dart';
 import 'package:todolist_app/cubit/auth_cubit.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
+import 'package:todolist_app/utils/validator.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -44,34 +48,42 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text("Forgot Password")),
-        body: SingleChildScrollView(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/background/login.png"),
+              fit: BoxFit.fill,
+            ),
+          ),
+
           child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: "Email",
+            padding: EdgeInsets.fromLTRB(24, 12, 24, 16),
+            child: Center(
+              child: Column(
+                children: [
+                  LogoComponent(text: "Forgot Password"),
+                  gap(24),
+                  TextFormFieldComponent(
+                    validator: Validator.email,
+                    controller: emailController,
                     hintText: "Enter your email",
-                    prefixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(),
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
                   ),
-                ),
-                gap(),
-                SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
+
+                  gap(),
+
+                  PrimaryButtonComponent(
+                    text: "Send Reset Email",
                     onPressed: () {
                       final email = emailController.text.trim();
                       context.read<AuthCubit>().forgotPassword(email);
                     },
-                    child: Text("Send Reset Email"),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

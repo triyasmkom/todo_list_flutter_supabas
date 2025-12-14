@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:todolist_app/component/button_component.dart';
+import 'package:todolist_app/component/text_form_field_component.dart';
 import 'package:todolist_app/cubit/user_cubit.dart';
 import 'package:todolist_app/screen/widget/custom_widged.dart';
 
@@ -53,7 +55,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile Saya")),
       body: BlocBuilder<UserCubit, UserState>(
         builder: (context, state) {
           if (state is UserLoading) {
@@ -76,51 +77,54 @@ class _ProfilePageState extends State<ProfilePage> {
               avatarProvider = NetworkImage(profile['photo_url']);
             }
 
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: _pickImage,
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundImage: avatarProvider,
-                        child:
-                            avatarProvider == null
-                                ? const Icon(Icons.person, size: 60)
-                                : null,
+            return Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/background/login.png"),
+                  fit: BoxFit.fill,
+                ),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: _pickImage,
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: avatarProvider,
+                          child:
+                              avatarProvider == null
+                                  ? const Icon(Icons.person, size: 60)
+                                  : null,
+                        ),
                       ),
-                    ),
 
-                    gap(16),
+                      gap(16),
 
-                    TextFormField(
-                      controller: firstNameController,
-                      decoration: const InputDecoration(
-                        labelText: "First Name",
-                        prefixIcon: Icon(Icons.person_2_outlined),
-                        border: OutlineInputBorder(),
+                      TextFormFieldComponent(
+                        controller: firstNameController,
+                        keyboardType: TextInputType.text,
+                        hintText: "First Name",
+                        prefixIcon: Icons.person_2_outlined,
                       ),
-                    ),
 
-                    gap(),
+                      gap(),
 
-                    TextFormField(
-                      controller: lastNameController,
-                      decoration: const InputDecoration(
-                        labelText: "Last Name",
-                        prefixIcon: Icon(Icons.person_2_outlined),
-                        border: OutlineInputBorder(),
+                      TextFormFieldComponent(
+                        controller: lastNameController,
+                        keyboardType: TextInputType.text,
+                        hintText: "Last Name",
+                        prefixIcon: Icons.person_2_outlined,
                       ),
-                    ),
 
-                    gap(),
+                      gap(),
 
-                    SizedBox(
-                      height: 40,
-                      width: double.infinity,
-                      child: ElevatedButton(
+                      PrimaryButtonComponent(
+                        text: "Simpan",
                         onPressed: () async {
                           final firstname = firstNameController.text.trim();
                           final lastname = lastNameController.text.trim();
@@ -148,10 +152,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             );
                           }
                         },
-                        child: const Text('Simpan'),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
